@@ -1,3 +1,4 @@
+#include "algorithms.hpp"
 #include <vector>
 
 std::vector<int> applyPermutation(std::vector<int> sequence, std::vector<int> permutation) {

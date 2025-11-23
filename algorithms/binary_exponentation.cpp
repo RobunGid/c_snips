@@ -1,3 +1,5 @@
+#include "algorithms.hpp"
+
 long long binary_exponentation(long long a, long long b) {
 	long long res = 1;
 	while (b > 0) {
