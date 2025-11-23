@@ -58,21 +58,3 @@ matrix operator *(const matrix& matrix_first_arg, const matrix& matrix_second_ar
 	}
 	return res;
 }
-
-int main(void) {
-	int m1_rows, m1_cols, m2_rows, m2_cols;
-	std::cout << "First matrix rows = ";
-	std::cin >> m1_rows;
-	std::cout << "First matrix cols = ";
-	std::cin >> m1_cols;
-	std::cout << "Second matrix rows = ";
-	std::cin >> m2_rows;
-	std::cout << "Second matrix cols = ";
-	std::cin >> m2_cols;
-	matrix m1(m1_rows, m1_cols);
-	matrix m2(m2_rows, m2_cols);
-	m1.in();
-	m2.in();
-	matrix r = m1 * m2;
-	r.out();
-}
