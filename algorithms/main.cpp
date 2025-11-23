@@ -4,13 +4,12 @@
 #include "algorithms.hpp"
 
 int main() {
-    assert(greatest_common_divisor(10, 5) == 5);
-    assert(greatest_common_divisor(54, 24) == 6);
-    assert(greatest_common_divisor(7, 13) == 1);
-    assert(greatest_common_divisor(0, 5) == 5);
-    assert(greatest_common_divisor(5, 0) == 5);
-    assert(greatest_common_divisor(0, 0) == 0);
-    assert(greatest_common_divisor(48, 180) == 12);
+    assert(least_common_multiple(4, 6) == 12);
+    assert(least_common_multiple(0, 5) == 0);
+    assert(least_common_multiple(7, 3) == 21);
+    assert(least_common_multiple(10, 10) == 10);
+    assert(least_common_multiple(1, 1) == 1);
+    assert(least_common_multiple(15, 20) == 60);
 
     std::cout << "OK\n";
 }
