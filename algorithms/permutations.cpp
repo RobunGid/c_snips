@@ -2,7 +2,7 @@
 
 std::vector<int> applyPermutation(std::vector<int> sequence, std::vector<int> permutation) {
     std::vector<int> newSequence(sequence.size());
-    for(int i = 0; i < (int)sequence.size(); i++) {
+    for(int i = 0; i < (int) sequence.size(); i++) {
         newSequence[i] = sequence[permutation[i]];
     }
     return newSequence;
