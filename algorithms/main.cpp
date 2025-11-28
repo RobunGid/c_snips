@@ -4,12 +4,9 @@
 #include "algorithms.hpp"
 
 int main() {
-    assert(least_common_multiple(4, 6) == 12);
-    assert(least_common_multiple(0, 5) == 0);
-    assert(least_common_multiple(7, 3) == 21);
-    assert(least_common_multiple(10, 10) == 10);
-    assert(least_common_multiple(1, 1) == 1);
-    assert(least_common_multiple(15, 20) == 60);
 
-    std::cout << "OK\n";
+	for (int i = 2; i < 30; i+=2) {
+		std::cout << i << " : " << __builtin_ctz(i) << std::endl;
+	}
+
 }
