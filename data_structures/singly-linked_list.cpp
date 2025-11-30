@@ -8,9 +8,13 @@ class SinglyLinkedList {
 		~SinglyLinkedList();
 
 		int getSize();
+		void push_front(data_type data);
 		void push_back(data_type data);
 		void pop_front();
+		void pop_back();
 		void clear();
+		void insert(data_type value, int index);
+		void removeAt(int index);
 
 		data_type& operator[](const int index);
 	private:
@@ -66,10 +70,51 @@ void SinglyLinkedList<data_type>::pop_front() {
 }
 
 template <typename data_type>
+void SinglyLinkedList<data_type>::pop_back() {
+	removeAt(size-1);
+}
+
+template <typename data_type>
 void SinglyLinkedList<data_type>::clear() {
 	while (size) {
 		pop_front();
 	}
+}
+
+template <typename data_type>
+void SinglyLinkedList<data_type>::push_front(data_type data) {
+	head = new Node<data_type>(data, head);
+	size++;
+}
+
+template <typename data_type>
+void SinglyLinkedList<data_type>::insert(data_type value, int index) {
+	if (index == 0) {
+		push_front(value);
+		return;
+	}
+	Node<data_type> *current = this->head;
+	for (int i = 0; i < index-1; i++) {
+		current = current->next;
+	}
+	current->next = new Node<data_type>(value, current->next);
+	size++;
+}
+
+template <typename data_type>
+void SinglyLinkedList<data_type>::removeAt(int index) {
+	if (index == 0) {
+		pop_front();
+		return;
+	}
+	Node<data_type> *current = this->head;
+	for (int i = 0; i < index-1; i++) {
+		current = current->next;
+	};
+	Node<data_type> *prev = current->next;
+	current->next = prev->next;
+	delete prev;
+	size--;
 }
 
 template <typename data_type>
@@ -87,18 +132,17 @@ data_type &SinglyLinkedList<data_type>::operator[](const int index) {
 
 int main() {
  	SinglyLinkedList<int> lst;
-	lst.push_back(34);
-	lst.push_back(45);
-	lst.push_back(56);
+	lst.push_back(1111);
+	lst.push_back(2222);
+	lst.push_back(3333);
 	std::cout << lst.getSize() << std::endl;
 	for (int i = 0; i < lst.getSize(); i++) {
 		std::cout << i << " = " << lst[i] << std::endl;
 	}
-	lst.pop_front();
+	std::cout << std::endl;
+	lst.removeAt(1);
 	for (int i = 0; i < lst.getSize(); i++) {
 		std::cout << i << " = " << lst[i] << std::endl;
 	}
-	lst.clear();
-	std::cout << lst.getSize() << std::endl;
 	return 0;
 }
