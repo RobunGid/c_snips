@@ -80,7 +80,6 @@ void DoublyLinkedList<data_type>::push_front(data_type data) {
 		head = newNode;
 		size++;
 	}
-
 }
 
 template <typename data_type>
@@ -89,10 +88,16 @@ void DoublyLinkedList<data_type>::pop_back() {
 		return;
 	}
 	Node<data_type> *prev_tail = tail;
-	tail = tail->prev;
-	tail->next = nullptr;
+	if (size > 1) {
+		tail = tail->prev;
+		tail->next = nullptr;
+	} else {
+		tail = nullptr;
+		head = nullptr;
+	}
 	delete prev_tail;
 	size--;
+
 }
 
 template <typename data_type>
@@ -103,28 +108,38 @@ void DoublyLinkedList<data_type>::clear() {
 }
 
 template <typename data_type>
-void DoublyLinkedList<data_type>::insert(data_type value, int index) {
+void DoublyLinkedList<data_type>::insert(data_type data, int index) {
+	if (index < 0 || index > size) return;
 	if (index == 0) {
-		push_front(value);
+		push_front(data);
 		return;
 	}
-	if (index < size / 2) {
-		Node<data_type> *current = head;
-		for (int i = 0; i < index-1; i++) {
-			current = current->next;
-		}
-		current->next = new Node<data_type>(value, current->next);
-		size++;
-	} else {
-		Node<data_type> *current = tail;
-		for (int i = size-1; i > index-1; i--) {
-			current = current->prev;
-		}
-		current->next = new Node<data_type>(value, current->next);
-		current->next->prev = current;
-		size++;
+	if (index == size) {
+		push_back(data);
+		return;
 	}
 
+	if (index < size / 2) {
+		Node<data_type>* current = head;
+		for (int i = 0; i < index - 1; i++) {
+			current = current->next;
+		}
+		Node<data_type>* nextNode = current->next;
+		Node<data_type>* newNode = new Node<data_type>(data, nextNode, current);
+		current->next = newNode;
+		nextNode->prev = newNode;
+	} else {
+		Node<data_type>* current = tail;
+		for (int i = size - 1; i > index; i--) {
+			current = current->prev;
+		}
+		Node<data_type>* prevNode = current->prev;
+		Node<data_type>* newNode = new Node<data_type>(data, current, prevNode);
+		prevNode->next = newNode;
+		current->prev = newNode;
+	}
+
+	size++;
 }
 
 template <typename data_type>
@@ -142,12 +157,20 @@ void DoublyLinkedList<data_type>::pop_front() {
 	if (size == 1) {
 		tail = head;
 	}
+	if (tail && size == 0) {
+		tail = nullptr;
+		delete tail;
+	}
 }
 
 template <typename data_type>
 void DoublyLinkedList<data_type>::removeAt(int index) {
 	if (index == 0) {
 		pop_front();
+		return;
+	}
+	if (index+1 == size) {
+		pop_back();
 		return;
 	}
 	if (index < size/2) {
@@ -189,61 +212,182 @@ data_type &DoublyLinkedList<data_type>::operator[](const int index) {
 	}
 }
 
+
+void test_constructor() {
+	DoublyLinkedList<int> list;
+	assert(list.getSize() == 0);
+}
+
+void test_push_back() {
+	DoublyLinkedList<int> list;
+	list.push_back(1);
+	list.push_back(2);
+	list.push_back(3);
+	assert(list.getSize() == 3);
+	assert(list[0] == 1);
+	assert(list[1] == 2);
+	assert(list[2] == 3);
+}
+
+void test_push_front() {
+	DoublyLinkedList<int> list;
+	list.push_front(1);
+	list.push_front(2);
+	list.push_front(3);
+	assert(list.getSize() == 3);
+	assert(list[0] == 3);
+	assert(list[1] == 2);
+	assert(list[2] == 1);
+}
+
+void test_pop_back() {
+	DoublyLinkedList<int> list;
+	list.push_back(1);
+	list.push_back(2);
+	list.push_back(3);
+	list.pop_back();
+	assert(list.getSize() == 2);
+	assert(list[0] == 1);
+	assert(list[1] == 2);
+}
+
+void test_pop_front() {
+	DoublyLinkedList<int> list;
+	list.push_back(1);
+	list.push_back(2);
+	list.push_back(3);
+	list.pop_front();
+	assert(list.getSize() == 2);
+	assert(list[0] == 2);
+	assert(list[1] == 3);
+}
+
+void test_insert_middle() {
+	DoublyLinkedList<int> list;
+	list.push_back(1);
+	list.push_back(3);
+	list.insert(2, 1);
+	assert(list.getSize() == 3);
+	assert(list[0] == 1);
+	assert(list[1] == 2);
+	assert(list[2] == 3);
+}
+
+void test_insert_begin() {
+	DoublyLinkedList<int> list;
+	list.push_back(2);
+	list.push_back(3);
+	list.insert(1, 0);
+	assert(list.getSize() == 3);
+	assert(list[0] == 1);
+}
+
+void test_insert_end() {
+	DoublyLinkedList<int> list;
+	list.push_back(1);
+	list.push_back(2);
+	list.insert(3, 2);
+	assert(list.getSize() == 3);
+	assert(list[2] == 3);
+}
+
+void test_remove_middle() {
+	DoublyLinkedList<int> list;
+	list.push_back(1);
+	list.push_back(2);
+	list.push_back(3);
+	list.removeAt(1);
+	assert(list.getSize() == 2);
+	assert(list[0] == 1);
+	assert(list[1] == 3);
+}
+
+void test_remove_begin() {
+	DoublyLinkedList<int> list;
+	list.push_back(1);
+	list.push_back(2);
+	list.removeAt(0);
+	assert(list.getSize() == 1);
+	assert(list[0] == 2);
+}
+
+void test_remove_end() {
+	DoublyLinkedList<int> list;
+	list.push_back(1);
+	list.push_back(2);
+	list.removeAt(1);
+	assert(list.getSize() == 1);
+	assert(list[0] == 1);
+}
+
+void test_clear() {
+	DoublyLinkedList<int> list;
+	list.push_back(1);
+	list.push_back(2);
+	list.push_back(3);
+	list.clear();
+	assert(list.getSize() == 0);
+}
+
+void test_operator_modify() {
+	DoublyLinkedList<int> list;
+	list.push_back(1);
+	list.push_back(2);
+	list[1] = 42;
+	assert(list[1] == 42);
+}
+
+void test_many_operations() {
+	DoublyLinkedList<int> list;
+	for (int i = 0; i < 1000; i++)
+		list.push_back(i);
+	assert(list.getSize() == 1000);
+	for (int i = 0; i < 500; i++)
+		list.pop_front();
+	assert(list.getSize() == 500);
+	for (int i = 0; i < 500; i++)
+		assert(list[i] == i + 500);
+}
+
+void test_string_type() {
+	DoublyLinkedList<std::string> list;
+	list.push_back("a");
+	list.push_back("b");
+	list.push_front("c");
+	assert(list.getSize() == 3);
+	assert(list[0] == "c");
+	assert(list[1] == "a");
+	assert(list[2] == "b");
+}
+
+void test_single_element_pop() {
+	DoublyLinkedList<int> list;
+	list.push_back(1);
+	list.pop_back();
+	assert(list.getSize() == 0);
+	list.push_back(2);
+	list.pop_front();
+	assert(list.getSize() == 0);
+}
+
 int main() {
-    DoublyLinkedList<int> list;
+DoublyLinkedList<int> list;
+	test_constructor();
+	test_push_back();
+	test_push_front();
+	test_pop_back();
+	test_pop_front();
+	test_insert_middle();
+	test_insert_begin();
+	test_insert_end();
+	test_remove_middle();
+	test_remove_begin();
+	test_remove_end();
+	test_clear();
+	test_operator_modify();
+	test_many_operations();
+	test_string_type();
+	test_single_element_pop();
 
-    assert(list.getSize() == 0);
-
-    list.pop_front();
-    list.pop_back();
-    assert(list.getSize() == 0);
-
-    list.push_back(1);
-    list.push_back(2);
-    list.push_back(3);
-    assert(list.getSize() == 3);
-    assert(list[0] == 1);
-    assert(list[1] == 2);
-    assert(list[2] == 3);
-
-    list.push_front(10);
-    assert(list[0] == 10);
-    assert(list.getSize() == 4);
-
-    list.insert(99, 2);
-    assert(list[2] == 99);
-    assert(list.getSize() == 5);
-
-    list.removeAt(2);
-    assert(list[2] == 2);
-    assert(list.getSize() == 4);
-
-    list.insert(555, 4);
-    assert(list[4] == 555);
-    assert(list.getSize() == 5);
-
-    list.pop_back();
-    assert(list.getSize() == 4);
-    assert(list[3] == 3);
-
-    list.pop_front();
-    assert(list.getSize() == 3);
-    assert(list[0] == 1);
-
-    list.clear();
-    assert(list.getSize() == 0);
-
-    for (int i = 0; i < 10; i++) list.push_back(i);
-    assert(list.getSize() == 10);
-    for (int i = 0; i < 10; i++) assert(list[i] == i);
-
-    list.removeAt(0);
-    assert(list[0] == 1);
-
-    list.removeAt(list.getSize() - 1);
-    assert(list.getSize() == 8);
-    assert(list[7] == 8);
-
-    list.insert(123, 5);
-    assert(list[5] == 123);
+	return 0;
 }
