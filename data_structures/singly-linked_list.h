@@ -148,11 +148,11 @@ data_type &SinglyLinkedList<data_type>::operator[](const int index) {
         throw std::out_of_range("Index out of range");
     }
 
-    Node<data_type>* current = head;
-    for (int i = 0; i < index; i++) {
-        current = current->next;
-    }
-    return current->data;
+	Node<data_type>* current = head;
+	for (int i = 0; i < index; i++) {
+		current = current->next;
+	}
+	return current->data;
 }
 
 #endif

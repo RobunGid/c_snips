@@ -1,6 +1,8 @@
 #ifndef DOUBLY_LIST_H
 #define DOUBLY_LIST_H
 
+#include <stdexcept>
+
 template <typename data_type>
 class DoublyLinkedList {
 	public:
@@ -200,16 +202,22 @@ void DoublyLinkedList<data_type>::remove_at(int index) {
 
 template <typename data_type>
 data_type &DoublyLinkedList<data_type>::operator[](const int index) {
-	int counter;
-	counter = 0;
-	Node<data_type> *current;
-	current = head;
-	while (current != nullptr) {
-		if (counter == index) {
-			return current->data;
+	if (index < 0 || index >= size) {
+        throw std::out_of_range("Index out of range");
+    }
+
+	if (index < size / 2) {
+		Node<data_type>* current = head;
+		for (int i = 0; i < index; i++) {
+			current = current->next;
 		}
-		current = current->next;
-		counter++;
+		return current->data;
+	} else {
+		Node<data_type>* current = tail;
+		for (int i = 0; i < (size-index-1); i++) {
+			current = current->prev;
+		}
+		return current->data;
 	}
 }
 
