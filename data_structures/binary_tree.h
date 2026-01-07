@@ -1,7 +1,8 @@
-#include <iostream>
-#include <vector>
-#include <cassert>
+#ifndef BINARY_TREE_H
+#define BINARY_TREE_H
+
 #include <type_traits>
+#include "stack.h"
 
 template <typename data_type>
 class BTree {
@@ -10,13 +11,13 @@ class BTree {
 	public:
 		BTree();
 		void insert(data_type data);
-		bool is_empty(void);
+		bool is_empty();
 		bool contains(data_type data);
-		data_type min(void);
-		data_type max(void);
-		int get_node_count(void);
-		int get_height(void);
-		data_type* traverse_in_order(void);
+		data_type min();
+		data_type max();
+		int get_node_count();
+		int get_height();
+		data_type* traverse_in_order();
 	private:
 		int node_count;
 		int height;
@@ -72,7 +73,7 @@ void BTree<data_type>::insert(data_type data) {
 }
 
 template <typename data_type>
-bool BTree<data_type>::is_empty(void) {
+bool BTree<data_type>::is_empty() {
 	return root == nullptr;
 }
 
@@ -95,7 +96,7 @@ bool BTree<data_type>::contains(data_type data) {
 }
 
 template <typename data_type>
-data_type BTree<data_type>::min(void) {
+data_type BTree<data_type>::min() {
 	if (is_empty()) throw std::runtime_error("Tree is empty");
 	Node<data_type> *current_node = root;
 	while (current_node->left) {
@@ -105,7 +106,7 @@ data_type BTree<data_type>::min(void) {
 }
 
 template <typename data_type>
-data_type BTree<data_type>::max(void) {
+data_type BTree<data_type>::max() {
 	if (is_empty()) throw std::runtime_error("Tree is empty");
 	Node<data_type> *current_node = root;
 	while (current_node->right) {
@@ -115,28 +116,39 @@ data_type BTree<data_type>::max(void) {
 }
 
 template <typename data_type>
-int BTree<data_type>::get_node_count(void) {
+int BTree<data_type>::get_node_count() {
 	return node_count;
 }
 
 template <typename data_type>
-int BTree<data_type>::get_height(void) {
+int BTree<data_type>::get_height() {
 	return height;
 }
 
 template <typename data_type>
-data_type* BTree<data_type>::traverse_in_order(void) {
+data_type* BTree<data_type>::traverse_in_order() {
 	if (is_empty()) return nullptr;
 	data_type* array = new data_type[node_count];
+	int index = 0;
+	Stack<Node<data_type>*> nodes = Stack<Node<data_type>*>();
+	nodes.push(root);
+ 	while (!nodes.is_empty()) {
+		Node<data_type>* node = nodes.peek();
+		if (node->left != nullptr) {
+			nodes.push(node->left);
+			node->left = nullptr;
+		} else {
+			array[index] = node->data;
+			index++;
+			nodes.pop();
+			if (node->right != nullptr) {
+				nodes.push(node->right);
+				node->right = nullptr;
+			}
+		}
+	}
+	nodes.clear();
+	return array;
 }
 
-int main() {
- 	BTree<int> tree;
-
-	tree.insert(1);
-	tree.insert(5);
-	tree.insert(10);
-	tree.insert(7);
-
-    return 0;
-}
+#endif

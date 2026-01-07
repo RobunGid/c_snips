@@ -1,5 +1,5 @@
-#include <iostream>
-#include <vector>
+#ifndef SINGLY_LIST_H
+#define SINGLY_LIST_H
 
 template <typename data_type>
 class SinglyLinkedList {
@@ -7,14 +7,16 @@ class SinglyLinkedList {
 		SinglyLinkedList();
 		~SinglyLinkedList();
 
-		int getSize();
+		int get_size();
+		bool is_empty();
 		void push_front(data_type data);
 		void push_back(data_type data);
 		void pop_front();
 		void pop_back();
 		void clear();
-		void insert(data_type value, int index);
-		void removeAt(int index);
+		void insert(data_type data, int index);
+		void remove_at(int index);
+		bool contains(data_type data);
 
 		data_type& operator[](const int index);
 	private:
@@ -43,8 +45,13 @@ SinglyLinkedList<data_type>::~SinglyLinkedList() {
 }
 
 template <typename data_type>
-int SinglyLinkedList<data_type>::getSize() {
+int SinglyLinkedList<data_type>::get_size() {
 	return size;
+}
+
+template <typename data_type>
+bool SinglyLinkedList<data_type>::is_empty() {
+	return size == 0;
 }
 
 template <typename data_type>
@@ -63,6 +70,7 @@ void SinglyLinkedList<data_type>::push_back(data_type data) {
 
 template <typename data_type>
 void SinglyLinkedList<data_type>::pop_front() {
+	if (is_empty()) return;
 	Node<data_type> *prev_head = head;
 	head = head->next;
 	delete prev_head;
@@ -71,7 +79,8 @@ void SinglyLinkedList<data_type>::pop_front() {
 
 template <typename data_type>
 void SinglyLinkedList<data_type>::pop_back() {
-	removeAt(size-1);
+	if (is_empty()) return;
+	remove_at(size-1);
 }
 
 template <typename data_type>
@@ -88,25 +97,26 @@ void SinglyLinkedList<data_type>::push_front(data_type data) {
 }
 
 template <typename data_type>
-void SinglyLinkedList<data_type>::insert(data_type value, int index) {
+void SinglyLinkedList<data_type>::insert(data_type data, int index) {
 	if (index == 0) {
-		push_front(value);
+		push_front(data);
 		return;
 	}
 	Node<data_type> *current = this->head;
 	for (int i = 0; i < index-1; i++) {
 		current = current->next;
 	}
-	current->next = new Node<data_type>(value, current->next);
+	current->next = new Node<data_type>(data, current->next);
 	size++;
 }
 
 template <typename data_type>
-void SinglyLinkedList<data_type>::removeAt(int index) {
+void SinglyLinkedList<data_type>::remove_at(int index) {
 	if (index == 0) {
 		pop_front();
 		return;
 	}
+	if (is_empty()) return;
 	Node<data_type> *current = this->head;
 	for (int i = 0; i < index-1; i++) {
 		current = current->next;
@@ -118,31 +128,29 @@ void SinglyLinkedList<data_type>::removeAt(int index) {
 }
 
 template <typename data_type>
-data_type &SinglyLinkedList<data_type>::operator[](const int index) {
-	int counter = 0;
+bool SinglyLinkedList<data_type>::contains(data_type data) {
+	if (is_empty()) return false;
 	Node<data_type> *current = this->head;
 	while (current != nullptr) {
-		if (counter == index) {
-			return current->data;
+		if (current->data == data) {
+			return true;
 		}
 		current = current->next;
-		counter++;
 	}
+	return false;
 }
 
-int main() {
- 	SinglyLinkedList<int> lst;
-	lst.push_back(1111);
-	lst.push_back(2222);
-	lst.push_back(3333);
-	std::cout << lst.getSize() << std::endl;
-	for (int i = 0; i < lst.getSize(); i++) {
-		std::cout << i << " = " << lst[i] << std::endl;
-	}
-	std::cout << std::endl;
-	lst.removeAt(1);
-	for (int i = 0; i < lst.getSize(); i++) {
-		std::cout << i << " = " << lst[i] << std::endl;
-	}
-	return 0;
+template <typename data_type>
+data_type &SinglyLinkedList<data_type>::operator[](const int index) {
+    if (index < 0 || index >= size) {
+        throw std::out_of_range("Index out of range");
+    }
+
+    Node<data_type>* current = head;
+    for (int i = 0; i < index; i++) {
+        current = current->next;
+    }
+    return current->data;
 }
+
+#endif

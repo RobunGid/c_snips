@@ -1,6 +1,5 @@
-#include <iostream>
-#include <vector>
-#include <cassert>
+#ifndef DOUBLY_LIST_H
+#define DOUBLY_LIST_H
 
 template <typename data_type>
 class DoublyLinkedList {
@@ -8,14 +7,14 @@ class DoublyLinkedList {
 		DoublyLinkedList();
 		~DoublyLinkedList();
 
-		int getSize();
+		int get_size();
 		void push_front(data_type data);
 		void push_back(data_type data);
 		void pop_front();
 		void pop_back();
 		void clear();
 		void insert(data_type value, int index);
-		void removeAt(int index);
+		void remove_at(int index);
 
 		data_type& operator[](const int index);
 	private:
@@ -47,7 +46,7 @@ DoublyLinkedList<data_type>::~DoublyLinkedList() {
 }
 
 template <typename data_type>
-int DoublyLinkedList<data_type>::getSize() {
+int DoublyLinkedList<data_type>::get_size() {
 	return size;
 }
 
@@ -164,7 +163,7 @@ void DoublyLinkedList<data_type>::pop_front() {
 }
 
 template <typename data_type>
-void DoublyLinkedList<data_type>::removeAt(int index) {
+void DoublyLinkedList<data_type>::remove_at(int index) {
 	if (index == 0) {
 		pop_front();
 		return;
@@ -212,182 +211,4 @@ data_type &DoublyLinkedList<data_type>::operator[](const int index) {
 	}
 }
 
-
-void test_constructor() {
-	DoublyLinkedList<int> list;
-	assert(list.getSize() == 0);
-}
-
-void test_push_back() {
-	DoublyLinkedList<int> list;
-	list.push_back(1);
-	list.push_back(2);
-	list.push_back(3);
-	assert(list.getSize() == 3);
-	assert(list[0] == 1);
-	assert(list[1] == 2);
-	assert(list[2] == 3);
-}
-
-void test_push_front() {
-	DoublyLinkedList<int> list;
-	list.push_front(1);
-	list.push_front(2);
-	list.push_front(3);
-	assert(list.getSize() == 3);
-	assert(list[0] == 3);
-	assert(list[1] == 2);
-	assert(list[2] == 1);
-}
-
-void test_pop_back() {
-	DoublyLinkedList<int> list;
-	list.push_back(1);
-	list.push_back(2);
-	list.push_back(3);
-	list.pop_back();
-	assert(list.getSize() == 2);
-	assert(list[0] == 1);
-	assert(list[1] == 2);
-}
-
-void test_pop_front() {
-	DoublyLinkedList<int> list;
-	list.push_back(1);
-	list.push_back(2);
-	list.push_back(3);
-	list.pop_front();
-	assert(list.getSize() == 2);
-	assert(list[0] == 2);
-	assert(list[1] == 3);
-}
-
-void test_insert_middle() {
-	DoublyLinkedList<int> list;
-	list.push_back(1);
-	list.push_back(3);
-	list.insert(2, 1);
-	assert(list.getSize() == 3);
-	assert(list[0] == 1);
-	assert(list[1] == 2);
-	assert(list[2] == 3);
-}
-
-void test_insert_begin() {
-	DoublyLinkedList<int> list;
-	list.push_back(2);
-	list.push_back(3);
-	list.insert(1, 0);
-	assert(list.getSize() == 3);
-	assert(list[0] == 1);
-}
-
-void test_insert_end() {
-	DoublyLinkedList<int> list;
-	list.push_back(1);
-	list.push_back(2);
-	list.insert(3, 2);
-	assert(list.getSize() == 3);
-	assert(list[2] == 3);
-}
-
-void test_remove_middle() {
-	DoublyLinkedList<int> list;
-	list.push_back(1);
-	list.push_back(2);
-	list.push_back(3);
-	list.removeAt(1);
-	assert(list.getSize() == 2);
-	assert(list[0] == 1);
-	assert(list[1] == 3);
-}
-
-void test_remove_begin() {
-	DoublyLinkedList<int> list;
-	list.push_back(1);
-	list.push_back(2);
-	list.removeAt(0);
-	assert(list.getSize() == 1);
-	assert(list[0] == 2);
-}
-
-void test_remove_end() {
-	DoublyLinkedList<int> list;
-	list.push_back(1);
-	list.push_back(2);
-	list.removeAt(1);
-	assert(list.getSize() == 1);
-	assert(list[0] == 1);
-}
-
-void test_clear() {
-	DoublyLinkedList<int> list;
-	list.push_back(1);
-	list.push_back(2);
-	list.push_back(3);
-	list.clear();
-	assert(list.getSize() == 0);
-}
-
-void test_operator_modify() {
-	DoublyLinkedList<int> list;
-	list.push_back(1);
-	list.push_back(2);
-	list[1] = 42;
-	assert(list[1] == 42);
-}
-
-void test_many_operations() {
-	DoublyLinkedList<int> list;
-	for (int i = 0; i < 1000; i++)
-		list.push_back(i);
-	assert(list.getSize() == 1000);
-	for (int i = 0; i < 500; i++)
-		list.pop_front();
-	assert(list.getSize() == 500);
-	for (int i = 0; i < 500; i++)
-		assert(list[i] == i + 500);
-}
-
-void test_string_type() {
-	DoublyLinkedList<std::string> list;
-	list.push_back("a");
-	list.push_back("b");
-	list.push_front("c");
-	assert(list.getSize() == 3);
-	assert(list[0] == "c");
-	assert(list[1] == "a");
-	assert(list[2] == "b");
-}
-
-void test_single_element_pop() {
-	DoublyLinkedList<int> list;
-	list.push_back(1);
-	list.pop_back();
-	assert(list.getSize() == 0);
-	list.push_back(2);
-	list.pop_front();
-	assert(list.getSize() == 0);
-}
-
-int main() {
-DoublyLinkedList<int> list;
-	test_constructor();
-	test_push_back();
-	test_push_front();
-	test_pop_back();
-	test_pop_front();
-	test_insert_middle();
-	test_insert_begin();
-	test_insert_end();
-	test_remove_middle();
-	test_remove_begin();
-	test_remove_end();
-	test_clear();
-	test_operator_modify();
-	test_many_operations();
-	test_string_type();
-	test_single_element_pop();
-
-	return 0;
-}
+#endif
