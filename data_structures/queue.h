@@ -1,8 +1,7 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#include <cassert>
-#include "singly-linked_list.h"
+#include "doubly-linked_list.h"
 
 template <typename data_type>
 class Queue {
@@ -16,12 +15,12 @@ class Queue {
 		bool contains(data_type data);
 		void clear();
 	private:
-		SinglyLinkedList<data_type> linked_list;
+		DoublyLinkedList<data_type> linked_list;
 };
 
 template <typename data_type>
 Queue<data_type>::Queue() {
-	linked_list = SinglyLinkedList<data_type>();
+	linked_list = DoublyLinkedList<data_type>();
 }
 
 template <typename data_type>

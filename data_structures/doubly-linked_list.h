@@ -15,6 +15,8 @@ class DoublyLinkedList {
 		void clear();
 		void insert(data_type value, int index);
 		void remove_at(int index);
+		bool contains(data_type data);
+		bool is_empty();
 
 		data_type& operator[](const int index);
 	private:
@@ -209,6 +211,24 @@ data_type &DoublyLinkedList<data_type>::operator[](const int index) {
 		current = current->next;
 		counter++;
 	}
+}
+
+template <typename data_type>
+bool DoublyLinkedList<data_type>::contains(data_type data) {
+	if (is_empty()) return false;
+	Node<data_type> *current = this->head;
+	while (current != nullptr) {
+		if (current->data == data) {
+			return true;
+		}
+		current = current->next;
+	}
+	return false;
+}
+
+template <typename data_type>
+bool DoublyLinkedList<data_type>::is_empty() {
+	return size == 0;
 }
 
 #endif
