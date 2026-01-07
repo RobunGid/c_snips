@@ -1,6 +1,8 @@
 #ifndef SINGLY_LIST_H
 #define SINGLY_LIST_H
 
+#include <stdexcept>
+
 template <typename data_type>
 class SinglyLinkedList {
 	public:
