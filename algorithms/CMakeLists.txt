@@ -10,4 +10,5 @@ add_executable(main
     least_common_multiple.cpp
     binary_exponentation.cpp
     permutations.cpp
+	pi_formulas.cpp
 )
